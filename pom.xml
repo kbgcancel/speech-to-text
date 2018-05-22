@@ -45,6 +45,12 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
 		</dependency>
+		
+		<dependency>
+  <groupId>com.ibm.watson.developer_cloud</groupId>
+  <artifactId>java-sdk</artifactId>
+  <version>4.1.0</version>
+</dependency>
 	</dependencies>
 
 	<build>
