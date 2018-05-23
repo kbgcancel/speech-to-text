@@ -6,9 +6,14 @@ import java.util.List;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.springframework.web.servlet.view.JstlView;
 
 import com.ibm.watson.developer_cloud.http.HttpMediaType;
 import com.ibm.watson.developer_cloud.speech_to_text.v1.SpeechToText;
@@ -45,7 +50,7 @@ public class SpeechToTextApplication {
 	 * 
 	 */
 	@RequestMapping(method = RequestMethod.POST)
-	public String transcribeAudio() {
+	public String transcribeAudio(ModelMap model) {
 
 		System.out.println("METHOD_NAME: transcribeAudio");
 
@@ -95,7 +100,7 @@ public class SpeechToTextApplication {
 				 if (prevSpeaker == speaker) {
 					 phrases.append(word + " ");
 				 } else {
-					 dialog.setPhrase(phrases.toString());
+					 dialog.setPhrase(phrases.toString().substring(0, phrases.length()-1));
 					 dialog.setSpeaker(prevSpeaker);
 					 
 					 // Add to Dialogs 
@@ -116,13 +121,17 @@ public class SpeechToTextApplication {
 					 dialogs.add(dialog);
 				 }
 			 }
+			 
+			 
+			model.addAttribute("message", "Successfully Converted Audio to Text.");
+			// Check if conversation is correct
+			for (Dialog dialog1 : dialogs) {
+				System.out.println("Speaker " + dialog1.getSpeaker() + ": " + dialog1.getPhrase().substring(0, dialog1.getPhrase().length()-1) + ".\n");
+				model.addAttribute("results", dialogs);
+				}
 		 }
-		 
-		 // Check if conversation is correct
-		 for (Dialog dialog1 : dialogs) {
-			System.out.println("Speaker " + dialog1.getSpeaker() + ": " + dialog1.getPhrase().substring(0, dialog1.getPhrase().length()-1) + ".\n");
-		}
 		 
 		 return "index";
 	}
+	
 }
