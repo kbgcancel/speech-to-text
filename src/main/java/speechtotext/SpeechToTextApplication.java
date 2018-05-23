@@ -59,79 +59,79 @@ public class SpeechToTextApplication {
 
 		File audio = new File("src/test/resources/TestDialogue.wav");
 
-		RecognizeOptions options = new RecognizeOptions.Builder()
-				.contentType(HttpMediaType.AUDIO_WAV)
-				.model("en-US_BroadbandModel")
-				.inactivityTimeout(-1)
-				.smartFormatting(true)
-				.wordConfidence(false)				
-				.speakerLabels(true) 
-				.build();
- 
-		 SpeechResults speechresult = service.recognize(audio, options).execute();
-		 //System.out.println(speechresult.toString());
+		RecognizeOptions options = new RecognizeOptions.Builder().contentType(HttpMediaType.AUDIO_WAV)
+				.model("en-US_BroadbandModel").inactivityTimeout(-1).smartFormatting(true).wordConfidence(false)
+				.speakerLabels(true).build();
 
-		 String word;
-		 StringBuffer phrases = new StringBuffer();
-		 int speaker = 0;
-		 int prevSpeaker = 0;
-		 
-		 // Create List of DialogExchange(Format: <speaker>:<phrase>)
-		 List<Dialog> dialogs = new ArrayList();
-		 Dialog dialog = new Dialog();
-		 
-		 System.out.println(speechresult.getResults());
-		 if(speechresult.getResults() != null && !speechresult.getResults().isEmpty()) {
-			 // FIXME: Currently for TestDialogue.wav, not sure if same index for other audio files
-			 List<Transcript> results = speechresult.getResults();
-			 SpeechAlternative alternative = results.get(0).getAlternatives().get(0);
-			 
-			 // Get timestamps
-			 List<SpeechTimestamp> timestamps = alternative.getTimestamps();
-			 // Get speakerLabels
-			 List<SpeakerLabel> speakerlabels = speechresult.getSpeakerLabels();
-			 
-			 // ASSUMING same yung index ng timestamps and speakerlabels.
-			 // compare speakerlabels for each timestamp then create appropriate dialog
-			 for(int i = 0; i < timestamps.size(); i++) {			 
-				 word = new String(timestamps.get(i).getWord());
-				 speaker = speakerlabels.get(i).getSpeaker();
-				 
-				 if (prevSpeaker == speaker) {
-					 phrases.append(word + " ");
-				 } else {
-					 dialog.setPhrase(phrases.toString().substring(0, phrases.length()-1));
-					 dialog.setSpeaker(prevSpeaker);
-					 
-					 // Add to Dialogs 
-					 dialogs.add(dialog);
-					 
-					 // create new instance of dialog and phrase
-					 dialog = new Dialog();
-					 phrases.setLength(0);
-					 
-					 prevSpeaker = speaker;
-				 }
-				 
-				 if (i == timestamps.size()-1) {
-					 dialog.setPhrase(phrases.toString());
-					 dialog.setSpeaker(speaker);
-					 
-					 // Add to Dialogs 
-					 dialogs.add(dialog);
-				 }
-			 }
-			 
-			 
-			model.addAttribute("message", "Successfully Converted Audio to Text.");
-			// Check if conversation is correct
-			for (Dialog dialog1 : dialogs) {
-				System.out.println("Speaker " + dialog1.getSpeaker() + ": " + dialog1.getPhrase().substring(0, dialog1.getPhrase().length()-1) + ".\n");
-				model.addAttribute("results", dialogs);
+		SpeechResults speechresult = service.recognize(audio, options).execute();
+		System.out.println(speechresult.toString());
+
+		String word;
+		StringBuffer phrases = new StringBuffer();
+		int speaker = 0;
+		int prevSpeaker = 0;
+		int speakerLabelIndx = 0;
+		// Create List of DialogExchange(Format: <speaker>:<phrase>)
+		List<Dialog> dialogs = new ArrayList();
+		Dialog dialog = new Dialog();
+
+		if (speechresult.getResults() != null && !speechresult.getResults().isEmpty()) {
+			List<Transcript> results = speechresult.getResults();
+
+			// SR: SpeechResult Object
+			for (int SRrsltSz = 0; SRrsltSz < results.size(); SRrsltSz++) {
+				for (int SRAltrntvSz = 0; SRAltrntvSz < results.get(SRrsltSz).getAlternatives().size(); SRAltrntvSz++) {
+
+					SpeechAlternative alternative = results.get(SRrsltSz).getAlternatives().get(SRAltrntvSz);
+					// Get timestamps
+					List<SpeechTimestamp> timestamps = alternative.getTimestamps();
+					// Get speakerLabels
+					List<SpeakerLabel> speakerlabels = speechresult.getSpeakerLabels();
+
+					// ASSUMING same yung index ng timestamps and speakerlabels.
+					// compare speakerlabels for each timestamp then create appropriate dialog
+					for (int i = 0; i < timestamps.size(); i++) {
+						word = new String(timestamps.get(i).getWord());
+						speaker = speakerlabels.get(speakerLabelIndx).getSpeaker();
+
+						if (prevSpeaker == speaker) {
+							phrases.append(word + " ");
+						} else {
+							dialog.setPhrase(phrases.toString());
+							dialog.setSpeaker(prevSpeaker);
+
+							dialogs.add(dialog);
+
+							// create new instance of dialog and phrase
+							dialog = new Dialog();
+							phrases.setLength(0);
+
+							prevSpeaker = speaker;
+						}
+
+						speakerLabelIndx++;
+						
+						// Add the last created Dialog to dialogList
+						if (i == timestamps.size() - 1) {
+							dialog.setPhrase(phrases.toString());
+							dialog.setSpeaker(speaker);
+
+							dialogs.add(dialog);
+						}
+					}
 				}
-		 }
-		 
-		 return "index";
+			}
+
+			// INFO Message
+			model.addAttribute("message", "Successfully Converted Audio to Text.");
+
+			for (Dialog dialog1 : dialogs) {
+				System.out.println("Speaker " + dialog1.getSpeaker() + ": " + dialog1.getPhrase() + ".\n");
+				model.addAttribute("results", dialogs);
+			}
+		}
+
+		return "index";
 	}
-	
+
 }

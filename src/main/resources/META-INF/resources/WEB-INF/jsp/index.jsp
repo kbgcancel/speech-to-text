@@ -40,7 +40,7 @@
 			}
 			
 			label.phrase {
-				text-transform: capitalize;
+				text-transform: initial;
 				word-spacing: 5px;
 				text-align: justify;
 			}
