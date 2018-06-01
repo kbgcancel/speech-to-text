@@ -29,9 +29,12 @@
 			}
 					
 			label.info {
-				font-style: italic;		
-				font-weight: lighter;	
 				color: blue;
+			}
+			
+			label.error {
+				font-style: italic;
+				color: red;
 			}
 			
 			label.speaker {
@@ -49,12 +52,18 @@
 	</head>
 
 	<body>
-		<h1>SPEECH-TO-TEXT DEMO</h1>
-		<form action="home" method="post">
+		<!-- <h1>SPEECH-TO-TEXT DEMO</h1> -->
+		SPEECH-TO-TEXT DEMO
+		<form method="post" action="/transcribe" enctype="multipart/form-data">
 			<table>
 				<tr>
 					<td>
-						<button>Transcribe</button><label class="info"> ${message} </label>
+						<label class="info"> ${message} </label>
+					</td>
+				</tr>		
+				<tr>
+					<td>
+						<input type="file" name="file" /><input type="submit" value="Transcribe" /><label class="error">${error} </label>
 					</td>
 				</tr>		
 				<tr>
