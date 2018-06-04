@@ -13,7 +13,7 @@
 <!-- Static Content -->
 <link rel="stylesheet" href="/resources/css/styles.css" type="text/css"></link>
 
-<title>[IBM Watson]Speech-to-Text Demo</title>
+<title>[DEMO]</title>
 
 </head>
 
@@ -22,7 +22,12 @@
 		<table>
 			<thead>
 				<tr>
-					<td><img alt="" src="/resources/img/mainheader.png"></td>
+					<td><img alt="" src="/resources/img/speech-recognition.png"></td>
+				</tr>
+				<tr>
+					<td style="text-align:center"><label class="title">Speech-to-Text Conversion</label><br>
+						<label class="desc">This demo uses speech recognition
+							capabilities to convert speech into text.</label></td>
 				</tr>
 			</thead>
 			<tbody>
@@ -50,6 +55,14 @@
 					</td>
 				</tr>
 			</tbody>
+			<tfoot>
+				<tr>
+					<td><h5>This Application is intended for demonstration
+							purposes only.</h5></td>
+					<td><h5>Copyright &copy; 2018 Advanced World Solutions.
+							All Rights Reserved.</h5></td>
+				</tr>
+			</tfoot>
 		</table>
 	</form>
 	<br />

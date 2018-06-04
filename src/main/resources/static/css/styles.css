@@ -1,3 +1,15 @@
+label.title {
+	font-family: Helvetica, sans-serif;
+	font-size: xx-large;
+	text-transform: uppercase;
+	/* https://css-tricks.com/almanac/properties/t/text-shadow/ */
+	color: #444;
+	text-shadow: 1px 0px 1px #ccc, 0px 1px 1px #eee, 2px 1px 1px #ccc, 1px
+		2px 1px #eee, 3px 2px 1px #ccc, 2px 3px 1px #eee, 4px 3px 1px #ccc,
+		3px 4px 1px #eee, 5px 4px 1px #ccc, 4px 5px 1px #eee, 6px 5px 1px #ccc,
+		5px 6px 1px #eee, 7px 6px 1px #ccc;
+}
+
 div.container {
 	border-style: solid;
 	border-width: medium;
@@ -31,4 +43,18 @@ label.phrase {
 	text-transform: initial;
 	word-spacing: 5px;
 	text-align: justify;
+}
+
+label.desc {
+	font-style: italic;
+	font-weight: lighter;
+	font-size: small;
+	word-spacing: 5px;
+	text-align: center;
+}
+
+table {
+	width: 80%; margin-left : auto;
+	margin-right: auto;
+	margin-left: auto;
 }
