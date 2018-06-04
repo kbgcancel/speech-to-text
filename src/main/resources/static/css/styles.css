@@ -1,0 +1,34 @@
+div.container {
+	border-style: solid;
+	border-width: medium;
+	height: 500px;
+	width: 600px;
+}
+
+div.phrase {
+	border-style: outset;
+}
+
+body {
+	font-family: Helvetica, sans-serif;
+}
+
+label.info {
+	color: blue;
+}
+
+label.error {
+	font-style: italic;
+	color: red;
+}
+
+label.speaker {
+	text-transform: uppercase;
+	font-weight: bold;
+}
+
+label.phrase {
+	text-transform: initial;
+	word-spacing: 5px;
+	text-align: justify;
+}
